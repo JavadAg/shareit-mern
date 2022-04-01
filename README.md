@@ -20,7 +20,7 @@ React
 
 Redux toolkit
 
-Chakra ui
+Chakra ui changed to Tailwind css
 
 Expressjs
 
