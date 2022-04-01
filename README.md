@@ -13,7 +13,7 @@ on both frontend and backend
 
 ## Future Updates
 
-- [ ] Follow and Unfollow
+- [x] Follow and Unfollow
 
 ## Built With
 React
