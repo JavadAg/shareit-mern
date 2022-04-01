@@ -1,31 +1,20 @@
 import React, { useState, useEffect } from "react"
 
+import { Disclosure, Menu, Transition } from "@headlessui/react"
+import Follow from "./Follow"
+
 import CreatePost from "./CreatePost"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate, Link } from "react-router-dom"
-import { LogoutAction } from "../redux/reducers/auth"
+import { LogoutAction } from "../redux/reducers/user"
 import { useLocation } from "react-router-dom"
 import decode from "jwt-decode"
-import {
-  Box,
-  Flex,
-  Avatar,
-  HStack,
-  IconButton,
-  Button,
-  Menu,
-  Text,
-  MenuButton,
-  useDisclosure,
-  useColorModeValue
-} from "@chakra-ui/react"
 
 const Navbar = () => {
   const location = useLocation()
-  const navigate = useNavigate()
   const dispatch = useDispatch()
   const [user, setUser] = useState()
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [showSidebar, setShowSidebar] = useState(false)
 
   const logout = () => {
     dispatch(LogoutAction())
@@ -45,78 +34,64 @@ const Navbar = () => {
   }, [location])
 
   return (
-    <Box
-      pos="fixed"
-      width="full"
-      zIndex={1}
-      bg={useColorModeValue("gray.200")}
-      px={[1, 2, 4]}
+    <Disclosure
+      as="nav"
+      className="bg-slate-200 fixed justify-center items-center z-20 w-full"
     >
-      <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-        <HStack spacing={8} alignItems={"center"}>
-          <Box>
-            <Link to={"/"}>
-              <Text fontWeight={"extrabold"} as={"em"}>
-                ShareIt
-              </Text>
-            </Link>
-          </Box>
-          {user ? (
-            <CreatePost />
-          ) : (
-            <Text fontSize={[14, 15, 18]}>
-              Login or Register to Share your memory
-            </Text>
-          )}
-        </HStack>
-        <Flex alignItems={"center"}>
-          {user ? (
-            <>
-              <Text px={[1, 4]} textColor={"red.800"} fontSize="1xl">
-                {user.result.name}
-              </Text>
-              <Button
-                onClick={logout}
-                variant={"solid"}
-                colorScheme={"red"}
-                size={"sm"}
-                mr={[1, 4]}
-              >
-                Logout
-              </Button>
-              <Menu>
-                <MenuButton
-                  as={Button}
-                  rounded={"full"}
-                  variant={"link"}
-                  cursor={"pointer"}
-                  minW={0}
+      <div className=" mx-auto px-2 sm:px-4 lg:px-5">
+        <div className="relative flex items-center justify-around h-16">
+          <div className="flex-1 flex items-center ">
+            <div>
+              <Link to={"/"}>
+                <span className="text-lg italic flex justify-center items-center px-1 text-indigo-300 font-bold ">
+                  ShareIt
+                </span>
+              </Link>
+            </div>
+            <div className="text-slate-800 ">
+              {user ? (
+                <button className="ml-1 sm:ml-2 py-1">
+                  <CreatePost />
+                </button>
+              ) : (
+                ""
+              )}
+            </div>
+          </div>
+          <div className="absolute flex flex-row justify-center items-center inset-y-0 right-0  pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+            {user ? (
+              <>
+                <span className="text-zinc-800 text-sm px-1 ">
+                  {user.result.name}
+                </span>
+                <button
+                  onClick={logout}
+                  className="text-gray-700 justify-center items-center hover:bg-indigo-300 bg-slate-300   hover:text-slate-800 block px-2 py-2 rounded-md text-sm font-medium"
                 >
-                  <Avatar
-                    size={"sm"}
-                    alt={user?.result?.name}
-                    src={user?.result?.imageUrl}
+                  Logout
+                </button>
+                <div className="ml-1 relative ">
+                  <Follow
+                    onClick={() => setShowSidebar(true)}
+                    showSidebar={showSidebar}
+                    setShowSidebar={setShowSidebar}
                   />
-                </MenuButton>
-              </Menu>
-            </>
-          ) : (
-            <>
-              <Button
-                to="/user"
-                as={Link}
-                variant={"solid"}
-                colorScheme={"telegram"}
-                size={"sm"}
-                mr={4}
-              >
-                Login / Register
-              </Button>
-            </>
-          )}
-        </Flex>
-      </Flex>
-    </Box>
+                </div>
+              </>
+            ) : (
+              <>
+                <Link
+                  className="text-slate-700 bg-slate-200  hover:bg-slate-300 rounded-md text-sm items-center px-2 py-1 "
+                  to="/user"
+                >
+                  Login / Register
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </Disclosure>
   )
 }
 

@@ -1,8 +1,8 @@
 import React, { useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { Get } from "../redux/reducers/post"
-import { useLocation, useParams } from "react-router-dom"
-import { Flex } from "@chakra-ui/react"
+import { Get, GetPostbyId } from "../redux/reducers/post"
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom"
+
 import Post from "./Post"
 
 export default function RecipeReviewCard() {
@@ -11,21 +11,36 @@ export default function RecipeReviewCard() {
   const location = useLocation()
   const postsinfo = posts
   const { id } = useParams()
+  const currentuser = JSON.parse(localStorage.getItem("profile"))
+
+  const followingIDs = currentuser?.result?.following?.id
 
   useEffect(() => {
     dispatch(Get())
   }, [location, id])
 
+  const handlePosts = () => {
+    dispatch(GetPostbyId(followingIDs))
+  }
+
   return (
-    <Flex
-      marginTop="60px"
-      justify="center"
-      align="center"
-      direction="column-reverse"
-    >
-      {postsinfo?.map((post, index) => (
-        <Post key={index} post={post} />
-      ))}
-    </Flex>
+    <div className="flex flex-col justify-center items-center">
+      <div className="flex flex-row space-x-4 mt-20">
+        {currentuser && (
+          <div className=" bg-slate-200 hover:bg-slate-300  px-2 py-1 rounded-md  ">
+            <button onClick={handlePosts}>Following Posts</button>
+          </div>
+        )}
+        <div className=" bg-slate-200 px-2 py-1 rounded-md hover:bg-slate-300 ">
+          <Link to="/">All Posts</Link>
+        </div>
+      </div>
+
+      <div className="flex flex-col-reverse justify-center items-center mt-5">
+        {postsinfo?.map((post, index) => (
+          <Post key={index} post={post} />
+        ))}
+      </div>
+    </div>
   )
 }

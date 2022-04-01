@@ -1,30 +1,15 @@
-import React, { useState } from "react"
-import { GoogleLogin } from "react-google-login"
-import { LoginAction } from "../redux/reducers/auth"
-import { Signin, Signup } from "../redux/reducers/auth"
-import { useDispatch } from "react-redux"
-import { useNavigate } from "react-router-dom"
+import React, { useState, useEffect } from "react"
 
-import {
-  Flex,
-  Box,
-  FormControl,
-  FormLabel,
-  Input,
-  Stack,
-  Link,
-  HStack,
-  Button,
-  Heading,
-  Text,
-  useColorModeValue
-} from "@chakra-ui/react"
+import { Signin, Signup } from "../redux/reducers/user"
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate, Link } from "react-router-dom"
 
 const UserAuth = () => {
-  const clientId = process.env.REACT_APP_CLIENT_ID
+  const { error } = useSelector((state) => state.auth)
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [sign, setSign] = useState(false)
+  const [errormessage, setErrormessage] = useState(false)
 
   const [data, setData] = useState({
     firstName: "",
@@ -34,21 +19,6 @@ const UserAuth = () => {
     confirmPassword: ""
   })
 
-  const onFailure = (res) => {
-    console.log("[Login failed]", res.profileObj)
-  }
-
-  const onSuccess = async (res) => {
-    const data = { result: res?.profileObj, token: res?.tokenId }
-
-    try {
-      dispatch(LoginAction(data))
-      navigate("/")
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
   const signhandler = () => {
     setSign(!sign)
   }
@@ -57,10 +27,6 @@ const UserAuth = () => {
     e.preventDefault()
     if (!sign) {
       dispatch(Signin(data)).then((originalPromiseResult) => {
-        localStorage.setItem(
-          "profile",
-          JSON.stringify(originalPromiseResult.payload)
-        )
         navigate("/")
       })
     } else {
@@ -71,137 +37,143 @@ const UserAuth = () => {
   }
 
   return (
-    <Flex
-      minH={"100vh"}
-      align={"center"}
-      justify={"center"}
-      bg={useColorModeValue("gray.50", "gray.800")}
-    >
-      <Stack spacing={8} mx={"auto"} maxW={"lg"} px={6}>
-        <Stack align={"center"}>
-          <Heading fontSize={[26, 33]}>
-            {sign ? "Sign up to your account" : "Sign in to your account"}
-          </Heading>
-          <Text fontSize={[16, 28]} color={"gray.600"}>
-            to enjoy all of our cool features
-          </Text>
-        </Stack>
-        <Box
-          rounded={"lg"}
-          bg={useColorModeValue("white", "gray.700")}
-          boxShadow={"lg"}
-          p={8}
-        >
-          <Stack spacing={4}>
-            {sign && (
-              <HStack>
-                <Box>
-                  <FormControl
-                    name="firstName"
+    <>
+      <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-8">
+          <div>
+            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+              {sign ? "Sign up to your account" : "Sign in to your account"}
+            </h2>
+            <p className="mt-2 text-center text-sm text-gray-600">
+              <span className="font-medium text-indigo-400 hover:text-indigo-500">
+                to enjoy all of our cool features{" "}
+              </span>
+            </p>
+          </div>
+          <form className="mt-8 space-y-6" onSubmit={submithandler}>
+            <div className="rounded-md shadow-sm -space-y-px">
+              <div>
+                {sign && (
+                  <div>
+                    <div>
+                      <label htmlFor="firstName" className="sr-only">
+                        First Name
+                      </label>
+                      <input
+                        id="firstName"
+                        name="firstName"
+                        maxLength="20"
+                        type="text"
+                        required
+                        onChange={(e) =>
+                          setData({ ...data, firstName: e.target.value })
+                        }
+                        className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                        placeholder="First Name"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="lastName" className="sr-only">
+                        First Name
+                      </label>
+                      <input
+                        id="lastName"
+                        name="lastName"
+                        maxLength="20"
+                        type="text"
+                        required
+                        onChange={(e) =>
+                          setData({ ...data, lastName: e.target.value })
+                        }
+                        className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                        placeholder="Last Name"
+                      />
+                    </div>
+                  </div>
+                )}
+                <label htmlFor="email-address" className="sr-only">
+                  Email address
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  maxLength="35"
+                  type="email"
+                  onChange={(e) => setData({ ...data, email: e.target.value })}
+                  autoComplete="email"
+                  required
+                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  placeholder="Email address"
+                />
+              </div>
+              <div>
+                <label htmlFor="password" className="sr-only">
+                  Password
+                </label>
+                <input
+                  id="password"
+                  name="password"
+                  onChange={(e) =>
+                    setData({ ...data, password: e.target.value })
+                  }
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  placeholder="Password"
+                />
+              </div>
+              {sign && (
+                <div>
+                  <label htmlFor="confirmPassword" className="sr-only">
+                    Password
+                  </label>
+                  <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
                     onChange={(e) =>
-                      setData({ ...data, firstName: e.target.value })
+                      setData({ ...data, confirmPassword: e.target.value })
                     }
-                    id="firstName"
-                    label="First Name"
-                    autoFocus
-                    isRequired
-                  >
-                    <FormLabel>First Name</FormLabel>
-                    <Input type="text" />
-                  </FormControl>
-                </Box>
-                <Box>
-                  <FormControl
-                    id="lastName"
-                    isRequired
-                    onChange={(e) =>
-                      setData({ ...data, lastName: e.target.value })
-                    }
-                    label="Last Name"
-                    name="lastName"
-                    autoComplete="family-name"
-                  >
-                    <FormLabel>Last Name</FormLabel>
-                    <Input type="text" />
-                  </FormControl>
-                </Box>
-              </HStack>
-            )}
+                    autoComplete="current-password"
+                    required
+                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    placeholder="Confirm Password"
+                  />
+                </div>
+              )}
+            </div>
 
-            <FormControl
-              id="email"
-              onChange={(e) => setData({ ...data, email: e.target.value })}
-              label="Email Address"
-              name="email"
-              isRequired
-              autoComplete="email"
-            >
-              <FormLabel>Email address</FormLabel>
-              <Input type="email" />
-            </FormControl>
-            <FormControl
-              name="password"
-              isRequired
-              label="Password"
-              onChange={(e) => setData({ ...data, password: e.target.value })}
-              id="password"
-              autoComplete="new-password"
-            >
-              <FormLabel>Password</FormLabel>
-              <Input type="password" />
-            </FormControl>
-            {sign && (
-              <FormControl
-                name="confirmPassword"
-                label="confirmPassword"
-                isRequired
-                type="password"
-                onChange={(e) =>
-                  setData({ ...data, confirmPassword: e.target.value })
-                }
-                id="confirmPassword"
-                autoComplete="new-password"
-              >
-                <FormLabel>confirmPassword</FormLabel>
-                <Input type="password" />
-              </FormControl>
-            )}
-            <Stack spacing={5}>
-              <Button
-                onClick={submithandler}
-                bg={"blue.400"}
-                color={"white"}
-                _hover={{
-                  bg: "blue.500"
-                }}
+            <div>
+              <button
+                type="submit"
+                className="group mb-3 relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-400 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 {sign ? "Sign up" : "Sign in"}
-              </Button>
-              <GoogleLogin
-                clientId={clientId}
-                render={(renderProps) => (
-                  <Button
-                    onClick={renderProps.onClick}
-                    disabled={renderProps.disabled}
-                  >
-                    Google SignIn
-                  </Button>
-                )}
-                onSuccess={onSuccess}
-                onFailure={onFailure}
-                cookiePolicy={"single_host_origin"}
-              />
-              <Link onClick={signhandler} to="#">
-                {sign
-                  ? "Already have an account? Sign in"
-                  : "Dont have an account ? Sign up"}
-              </Link>
-              <Button onClick={() => navigate("/")}>Go to Homepage</Button>
-            </Stack>
-          </Stack>
-        </Box>
-      </Stack>
-    </Flex>
+              </button>
+              {errormessage && (
+                <span className="text-red-500 text-xl font-bold flex justify-center items-end">
+                  Error try again
+                </span>
+              )}
+            </div>
+          </form>
+          <Link onClick={signhandler} to="#">
+            {sign
+              ? "Already have an account? Sign in"
+              : "Dont have an account ? Sign up"}
+          </Link>
+          <div>
+            <button
+              className=" flex justify-center text-sm hover:text-stone-700 items-center"
+              onClick={() => navigate("/")}
+            >
+              Go to Homepage
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
   )
 }
 export default UserAuth

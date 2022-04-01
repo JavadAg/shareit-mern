@@ -33,6 +33,22 @@ export const Get = createAsyncThunk("post/Get", async () => {
   }
 })
 
+export const GetPostbyId = createAsyncThunk(
+  "post/GetPostbyId",
+  async (data) => {
+    console.log(data)
+    try {
+      const response = await axios.post(
+        "http://localhost:3002/post/filter",
+        data
+      )
+      return response.data
+    } catch (error) {
+      console.log(error)
+    }
+  }
+)
+
 export const Update = createAsyncThunk("post/Update", async (data) => {
   try {
     const { form } = data
@@ -94,7 +110,7 @@ const postSlice = createSlice({
       const currentPosts = JSON.parse(JSON.stringify(state.posts))
       return {
         ...state,
-        posts: [...currentPosts, action.payload.posts],
+        posts: [...currentPosts, action.payload.post],
         isLoading: false
       }
     },
@@ -105,6 +121,19 @@ const postSlice = createSlice({
       }
     },
     [Get.fulfilled]: (state = initialState, action) => {
+      return {
+        ...state,
+        posts: action.payload.posts,
+        isLoading: false
+      }
+    },
+    [GetPostbyId.pending]: (state = initialState, action) => {
+      return {
+        ...state,
+        isLoading: true
+      }
+    },
+    [GetPostbyId.fulfilled]: (state = initialState, action) => {
       return {
         ...state,
         posts: action.payload.posts,
@@ -137,10 +166,10 @@ const postSlice = createSlice({
     [Update.fulfilled]: (state = initialState, action) => {
       const currentPosts = JSON.parse(JSON.stringify(state.posts))
       currentPosts.map((post) => {
-        if (post._id === action.payload.posts._id) {
-          post.title = action.payload.posts.title
-          post.text = action.payload.posts.text
-          post.image = action.payload.posts.image
+        if (post._id === action.payload.post._id) {
+          post.title = action.payload.post.title
+          post.text = action.payload.post.text
+          post.image = action.payload.post.image
         }
       })
       return {
@@ -157,9 +186,10 @@ const postSlice = createSlice({
     },
     [Like.fulfilled]: (state = initialState, action) => {
       const currentPosts = JSON.parse(JSON.stringify(state.posts))
+
       currentPosts.map((post) => {
-        if (post._id === action.payload.posts._id) {
-          post.like = action.payload.posts.like
+        if (post._id === action.payload.Likedpost._id) {
+          post.like = action.payload.Likedpost.like
         }
       })
       return {
@@ -177,8 +207,8 @@ const postSlice = createSlice({
     [Comment.fulfilled]: (state = initialState, action) => {
       const currentPosts = JSON.parse(JSON.stringify(state.posts))
       currentPosts.map((post) => {
-        if (post._id === action.payload.posts._id) {
-          post.comment = action.payload.posts.comment
+        if (post._id === action.payload.CommentedPost._id) {
+          post.comment = action.payload.CommentedPost.comment
         }
       })
 

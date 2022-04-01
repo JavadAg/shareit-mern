@@ -3,8 +3,17 @@ import axios from "axios"
 
 const initialState = {
   userprofile: [],
+  error: [],
   isLoading: false
 }
+
+axios.interceptors.request.use(function (req) {
+  if (localStorage.getItem("profile"))
+    req.headers.Authorization = `Bearer ${
+      JSON.parse(localStorage.getItem("profile")).token
+    }`
+  return req
+})
 
 export const Signup = createAsyncThunk("users/Signup", async (users) => {
   const response = await axios.post("http://localhost:3002/users/signup", users)
@@ -13,6 +22,14 @@ export const Signup = createAsyncThunk("users/Signup", async (users) => {
 
 export const Signin = createAsyncThunk("users/Signin", async (users) => {
   const response = await axios.post("http://localhost:3002/users/signin", users)
+
+  return response.data
+})
+
+export const Follow = createAsyncThunk("users/ّFollow", async (data) => {
+  const response = await axios.put(`http://localhost:3002/users/follow`, {
+    data
+  })
 
   return response.data
 })
@@ -37,9 +54,16 @@ const authSlice = createSlice({
     },
     [Signup.fulfilled]: (state = initialState, action) => {
       localStorage.setItem("profile", JSON.stringify(action.payload))
-
       return {
         ...state,
+        isLoading: false
+      }
+    },
+    [Signin.rejected]: (state = initialState, action) => {
+      console.log(action.error.name, action.error.message)
+      return {
+        ...state,
+        error: action.error.message,
         isLoading: false
       }
     },
@@ -50,7 +74,21 @@ const authSlice = createSlice({
       }
     },
     [Signin.fulfilled]: (state = initialState, action) => {
-      // localStorage.setItem("profile", JSON.stringify(action.payload))
+      localStorage.setItem("profile", JSON.stringify(action.payload))
+      return {
+        ...state,
+
+        isLoading: false
+      }
+    },
+    [Follow.pending]: (state = initialState, action) => {
+      return {
+        ...state,
+        isLoading: true
+      }
+    },
+    [Follow.fulfilled]: (state = initialState, action) => {
+      localStorage.setItem("profile", JSON.stringify(action.payload))
       return {
         ...state,
         isLoading: false
