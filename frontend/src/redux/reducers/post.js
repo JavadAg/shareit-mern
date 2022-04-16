@@ -7,6 +7,8 @@ const initialState = {
   isLoading: false
 }
 
+const url = "http://localhost:3002/post"
+
 axios.interceptors.request.use(function (req) {
   if (localStorage.getItem("profile"))
     req.headers.Authorization = `Bearer ${
@@ -17,7 +19,7 @@ axios.interceptors.request.use(function (req) {
 
 export const Create = createAsyncThunk("post/Create", async (formdata) => {
   try {
-    const response = await axios.post("http://localhost:3002/post", formdata)
+    const response = await axios.post(`${url}`, formdata)
     return response.data
   } catch (error) {
     console.log(error)
@@ -26,7 +28,7 @@ export const Create = createAsyncThunk("post/Create", async (formdata) => {
 
 export const Get = createAsyncThunk("post/Get", async () => {
   try {
-    const response = await axios.get("http://localhost:3002/post")
+    const response = await axios.get(`${url}`)
     return response.data
   } catch (error) {
     console.log(error)
@@ -36,12 +38,8 @@ export const Get = createAsyncThunk("post/Get", async () => {
 export const GetPostbyId = createAsyncThunk(
   "post/GetPostbyId",
   async (data) => {
-    console.log(data)
     try {
-      const response = await axios.post(
-        "http://localhost:3002/post/filter",
-        data
-      )
+      const response = await axios.post(`${url}/filter`, data)
       return response.data
     } catch (error) {
       console.log(error)
@@ -53,7 +51,7 @@ export const Update = createAsyncThunk("post/Update", async (data) => {
   try {
     const { form } = data
     const id = data.postId
-    const response = await axios.patch(`http://localhost:3002/post/${id}`, form)
+    const response = await axios.patch(`${url}/${id}`, form)
     return response.data
   } catch (error) {
     console.log(error)
@@ -62,7 +60,7 @@ export const Update = createAsyncThunk("post/Update", async (data) => {
 
 export const Like = createAsyncThunk("post/Like", async (id) => {
   try {
-    const response = await axios.patch(`http://localhost:3002/post/${id}/like`)
+    const response = await axios.patch(`${url}/${id}/like`)
     return response.data
   } catch (error) {
     console.log(error)
@@ -72,12 +70,8 @@ export const Like = createAsyncThunk("post/Like", async (id) => {
 export const Comment = createAsyncThunk("post/Comment", async (data) => {
   try {
     const usercomment = data
-
     const id = data.postId
-    const response = await axios.post(
-      `http://localhost:3002/post/${id}/comment`,
-      { usercomment }
-    )
+    const response = await axios.post(`${url}/${id}/comment`, { usercomment })
     return response.data
   } catch (error) {
     console.log(error)
@@ -86,9 +80,7 @@ export const Comment = createAsyncThunk("post/Comment", async (data) => {
 
 export const Delete = createAsyncThunk("post/Delete", async (id) => {
   try {
-    const response = await axios.delete(
-      `http://localhost:3002/post/${id}/delete`
-    )
+    const response = await axios.delete(`${url}/${id}/delete`)
     return response.data
   } catch (error) {
     console.log(error)

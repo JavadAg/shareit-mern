@@ -134,8 +134,8 @@ const Post = ({ post }) => {
                         <button
                           onClick={deletePost}
                           className={`${
-                            active ? "bg-indigo-100 " : "text-gray-900"
-                          } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                            active ? "bg-indigo-200 " : "text-gray-900"
+                          } group flex justify-center rounded-md items-center w-full px-2 py-2 text-sm`}
                         >
                           Delete
                         </button>
@@ -206,41 +206,50 @@ const Post = ({ post }) => {
                 } w-5 h-5 text-indigo-500`}
               />
             </Disclosure.Button>
-            <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
-              <div className="relative">
-                {user && (
-                  <div className="flex justify-center items-center">
-                    <input
-                      className="pt-2 pb-2 pl-3 w-full h-11 bg-slate-100 rounded-lg placeholder:text-slate-600 font-medium pr-20"
-                      type="text"
-                      onChange={(e) => setComment(e.target.value)}
-                      placeholder="Write a comment"
-                    />
+            <Transition
+              enter="transition duration-100 ease-out"
+              enterFrom="transform scale-95 opacity-0"
+              enterTo="transform scale-100 opacity-100"
+              leave="transition duration-75 ease-out"
+              leaveFrom="transform scale-100 opacity-100"
+              leaveTo="transform scale-95 opacity-0"
+            >
+              <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
+                <div className="relative">
+                  {user && (
+                    <div className="flex justify-center items-center">
+                      <input
+                        className="pt-2 pb-2 pl-3 w-full h-11 bg-slate-100 rounded-lg placeholder:text-slate-600 font-medium pr-20"
+                        type="text"
+                        onChange={(e) => setComment(e.target.value)}
+                        placeholder="Write a comment"
+                      />
 
-                    <span
-                      onClick={handlecomment}
-                      className="flex absolute cursor-pointer right-3 "
-                    >
-                      <svg
-                        className="fill-indigo-500"
-                        style={{ width: "22px", height: "22px" }}
-                        viewBox="0 0 24 24"
+                      <span
+                        onClick={handlecomment}
+                        className="flex absolute cursor-pointer right-3 "
                       >
-                        <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"></path>
-                      </svg>
-                    </span>
-                  </div>
-                )}
-
-                <div className=" px-1 bg-slate-100 rounded-md mt-3 flex flex-col  ">
-                  {post?.comment.map((comment, index) => (
-                    <div className="font-mono p-1" key={index}>
-                      {comment}
+                        <svg
+                          className="fill-indigo-500"
+                          style={{ width: "22px", height: "22px" }}
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"></path>
+                        </svg>
+                      </span>
                     </div>
-                  ))}
+                  )}
+
+                  <div className=" px-1 bg-slate-100 rounded-md mt-3 flex flex-col  ">
+                    {post?.comment.map((comment, index) => (
+                      <div className="font-mono p-1" key={index}>
+                        {comment}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </Disclosure.Panel>
+              </Disclosure.Panel>
+            </Transition>
           </>
         )}
       </Disclosure>

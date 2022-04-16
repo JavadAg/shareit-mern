@@ -46,11 +46,13 @@ const CreatePost = ({ postId }) => {
     <>
       <a
         type="button"
-        className="hover:bg-indigo-300 bg-slate-300 text-gray-900
-        group flex rounded-md w-full px-2 py-2 text-sm"
+        className={`hover:bg-indigo-200 bg-slate-300 text-gray-900
+         flex rounded-md justify-center px-2 py-2 text-sm cursor-pointer ${
+           postId ? "bg-white" : ""
+         }`}
         onClick={() => setShowModal(true)}
       >
-        {postId ? "Edit" : "Create"}
+        {postId ? "Edit" : "Create Post"}
       </a>
       {showModal ? (
         <>

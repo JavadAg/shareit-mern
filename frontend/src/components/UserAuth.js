@@ -91,7 +91,7 @@ const UserAuth = () => {
                     </div>
                   </div>
                 )}
-                <label htmlFor="email-address" className="sr-only">
+                <label htmlFor="email-address" className={`sr-only `}>
                   Email address
                 </label>
                 <input
@@ -102,7 +102,9 @@ const UserAuth = () => {
                   onChange={(e) => setData({ ...data, email: e.target.value })}
                   autoComplete="email"
                   required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  className={`appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm ${
+                    !sign && "rounded-t-md"
+                  }`}
                   placeholder="Email address"
                 />
               </div>

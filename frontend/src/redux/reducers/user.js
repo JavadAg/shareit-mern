@@ -16,20 +16,29 @@ axios.interceptors.request.use(function (req) {
 })
 
 export const Signup = createAsyncThunk("users/Signup", async (users) => {
-  const response = await axios.post("http://localhost:3002/users/signup", users)
+  const response = await axios.post(
+    "https://shareit-mern.herokuapp.com/users/signup",
+    users
+  )
   return response.data
 })
 
 export const Signin = createAsyncThunk("users/Signin", async (users) => {
-  const response = await axios.post("http://localhost:3002/users/signin", users)
+  const response = await axios.post(
+    "https://shareit-mern.herokuapp.com/users/signin",
+    users
+  )
 
   return response.data
 })
 
 export const Follow = createAsyncThunk("users/ّFollow", async (data) => {
-  const response = await axios.put(`http://localhost:3002/users/follow`, {
-    data
-  })
+  const response = await axios.put(
+    `https://shareit-mern.herokuapp.com/users/follow`,
+    {
+      data
+    }
+  )
 
   return response.data
 })

@@ -17,6 +17,10 @@ app.use("/users", usersRoutes)
 app.use("/post", postRoutes)
 app.use("/images", express.static(path.join(__dirname, "images")))
 
+app.get("/", (req, res) => {
+  res.send("app is runing")
+})
+
 mongoose
   .connect(process.env.URI, {
     useNewUrlParser: true,
