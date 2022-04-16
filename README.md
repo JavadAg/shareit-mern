@@ -1,8 +1,15 @@
 # shareit-mern
 
-social media clone using MERN stack
+### social media clone using MERN stack
 
-###Screenshot
+Responsive  
+Like  
+Comment  
+Follow and Unfollow  
+Edit  
+Delete
+
+## Screenshot
 ![](./assets/Capture.PNG)
 
 ## Getting started
