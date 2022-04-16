@@ -7,6 +7,8 @@ const initialState = {
   isLoading: false
 }
 
+const url = "http://localhost:3002/users"
+
 axios.interceptors.request.use(function (req) {
   if (localStorage.getItem("profile"))
     req.headers.Authorization = `Bearer ${
@@ -16,29 +18,20 @@ axios.interceptors.request.use(function (req) {
 })
 
 export const Signup = createAsyncThunk("users/Signup", async (users) => {
-  const response = await axios.post(
-    "https://shareit-mern.herokuapp.com/users/signup",
-    users
-  )
+  const response = await axios.post(`${url}/signup`, users)
   return response.data
 })
 
 export const Signin = createAsyncThunk("users/Signin", async (users) => {
-  const response = await axios.post(
-    "https://shareit-mern.herokuapp.com/users/signin",
-    users
-  )
+  const response = await axios.post(`${url}/signin`, users)
 
   return response.data
 })
 
 export const Follow = createAsyncThunk("users/ّFollow", async (data) => {
-  const response = await axios.put(
-    `https://shareit-mern.herokuapp.com/users/follow`,
-    {
-      data
-    }
-  )
+  const response = await axios.put(`${url}/follow`, {
+    data
+  })
 
   return response.data
 })
