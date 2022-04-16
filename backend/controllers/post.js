@@ -106,7 +106,9 @@ export const deletepost = async (req, res) => {
   const id = req.params.id
   try {
     const post = await Post.findById(id)
-    fs.unlinkSync(post.image.path)
+    if (fs.existsSync(post.image.path)) {
+      fs.unlinkSync(post.image.path)
+    }
     const deletedpost = await Post.findByIdAndDelete(id)
     res.status(200).json({ deletedpost })
   } catch (error) {

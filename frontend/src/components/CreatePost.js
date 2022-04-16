@@ -105,6 +105,12 @@ const CreatePost = ({ postId }) => {
                         />
                       </div>
                       <div>
+                        <label
+                          htmlFor="name"
+                          className="text-gray-800 text-sm font-bold leading-tight tracking-normal"
+                        >
+                          Photo (max size 2mb)
+                        </label>
                         {postDetail ? (
                           <input
                             className="block w-full cursor-pointer bg-gray-50 border border-gray-300 text-gray-900 focus:outline-none focus:border-transparent text-sm rounded-sm"
@@ -131,8 +137,12 @@ const CreatePost = ({ postId }) => {
                       >
                         Close
                       </button>
-                      {text.length > 70 || title.length > 30 ? (
-                        "Error : Check form values !"
+                      {text.length > 70 ||
+                      title.length > 30 ||
+                      image?.size > 2000000 ? (
+                        <p className="bg-red-200 p-1 rounded-md">
+                          Error : Check form values !
+                        </p>
                       ) : (
                         <button
                           className="flex items-center py-1 px-3 bg-indigo-200 rounded-md shadow-xs cursor-pointer text-gray-900 hover:bg-indigo-300 hover:text-gray-900"

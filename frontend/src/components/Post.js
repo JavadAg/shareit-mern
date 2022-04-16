@@ -76,9 +76,9 @@ const Post = ({ post }) => {
       </div>
       <h2 className="text-2xl font-extrabold">{post?.title}</h2>
       <div className="py-4">
-        <a className="flex" href="#">
+        <a className="flex  justify-center" href="#">
           <img
-            className="max-w-full rounded-lg"
+            className="max-w-full max-h-full object-contain rounded-lg"
             src={`http://localhost:3002/${post?.image?.path}`}
           />
         </a>
