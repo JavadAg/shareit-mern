@@ -7,7 +7,7 @@ const initialState = {
   isLoading: false
 }
 
-const url = "http://localhost:3002/users"
+const url = `${process.env.REACT_APP_URL}/users`
 
 axios.interceptors.request.use(function (req) {
   if (localStorage.getItem("profile"))

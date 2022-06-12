@@ -79,7 +79,7 @@ const Post = ({ post }) => {
         <a className="flex  justify-center" href="#">
           <img
             className="max-w-full max-h-full object-contain rounded-lg"
-            src={`http://localhost:3002/${post?.image?.path}`}
+            src={`${process.env.REACT_APP_URL}/${post?.image?.path}`}
           />
         </a>
       </div>

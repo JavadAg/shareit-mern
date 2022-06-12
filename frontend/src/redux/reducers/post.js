@@ -7,8 +7,8 @@ const initialState = {
   isLoading: false
 }
 
-const url = "http://localhost:3002/post"
-
+const url = `${process.env.REACT_APP_URL}/post`
+console.log(url)
 axios.interceptors.request.use(function (req) {
   if (localStorage.getItem("profile"))
     req.headers.Authorization = `Bearer ${
